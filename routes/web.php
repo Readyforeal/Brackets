@@ -11,9 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Auth::routes();
 
@@ -27,8 +24,11 @@ Route::patch('/profile/{user}', 'ProfilesController@update')->name('profile.upda
 
 Route::get('/p/create', 'PostsController@create');
 Route::post('/p', 'PostsController@store');
+Route::get('/', 'PostsController@index');
 
 Route::post('/p/{post}/comment', 'CommentsController@store');
+
+Route::post('follow/{user}', 'FollowsController@store');
 
 
 

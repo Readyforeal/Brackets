@@ -2,17 +2,36 @@
 
 @section('content')
 <div class="container">
-    <section class="mt-5">
+    <section class="border-bottom">
         <div class="row">
-            <div class="col-3">
-                <img src="/storage/{{ $user->profile->profile_image }}" class="img-fluid">
+            <div class="col-3 p-5">
+                <img src="{{ $user->profile->profileImage() }}" class="rounded-circle img-fluid">
             </div>
 
-            <div class="col-9 p-5">
+            <div class="col-6 py-5">
                 <h3 class="font-weight-bold">{{ $user->profile->name }}, {{ $user->profile->getAge() }}</h3>
+
                 <p class="m-0">{{ $user->profile->job_title }} at {{ $user->profile->job_employer }}</p>
                 <p>{{ $user->profile->institution }} {{ $user->profile->graduation_year }}</p>
-                <p class="lead">{{ $user->profile->about }}</p>
+
+                @can('update', $user->profile)
+                <a href="/profile/{{ $user->id }}/edit" class="text-link text-secondary">Edit profile</a>
+                @endcan
+
+                @if(auth()->user()->id != $user->id)
+                <follow-button user-id='{{ $user->id }}' follows="{{ $follows }}"></follow-button>
+                @endif
+            </div>
+
+            <div class="col-3 align-self-center text-center">
+                <p class="lead font-weight-bold m-0">{{ $user->posts->count() }}</p>
+                <p class="text-secondary">POSTS</p>
+
+                <p class="lead font-weight-bold m-0">{{ $user->profile->followers->count() }}</p>
+                <p class="text-secondary">FOLLOWERS</p>
+
+                <p class="lead font-weight-bold m-0">{{ $user->following->count() }}</p>
+                <p class="text-secondary">FOLLOWING</p>
             </div>
         </div>
     </section>
@@ -20,9 +39,9 @@
     <section class="mt-5">
         <div class="row">
             <div class="col-3">
-                @can('update', $user->profile)
-                <a href="/profile/{{ $user->id }}/edit" class="text-link text-secondary">Edit profile</a>
-                @endcan
+
+                <p class="lead pt-5">About</p>
+                <p class="lead">{{ $user->profile->about }}</p>
 
                 <p class="lead pt-5">Interests</p>
                 <p class="text-secondary">{{ $user->profile->interests }}</p>
@@ -31,12 +50,17 @@
                 <p class="text-secondary">{{ $user->profile->location }}</p>
             </div>
 
-            <div class="col-6 pl-5">
+            <div class="col-6">
                 @can('update', $user->profile)
-                    <form method="POST" action="/p" enctype="multipart/form-data" class="mb-5">
-                        @csrf
-                        <div class="form-group">
-                            <textarea style="resize: none;" rows="4" id="post_text" type="post_text" class="form-control bg-light border-bottom-0 rounded-0 @error('post_text') is-invalid @enderror" name="post_text" value="{{ old('post_text') }}" required autocomplete="post_text"></textarea>
+                    <div class="mb-5">
+                        <div class="pl-2">
+                            <img src="/storage/{{ $user->profile->profile_image }}" width="48" class="rounded-circle">
+                        </div>
+
+                        <form method="POST" action="/p" enctype="multipart/form-data" class="mt-3 rounded border">
+                            @csrf
+
+                            <textarea placeholder="Create post.." style="resize: none;" rows="5" id="post_text" type="post_text" class="form-control p-3 bg-light border-0 @error('post_text') is-invalid @enderror" name="post_text" value="{{ old('post_text') }}" required autocomplete="post_text"></textarea>
 
                             @error('post_text')
                                 <span class="invalid-feedback" role="alert">
@@ -44,27 +68,49 @@
                                 </span>
                             @enderror
 
-                            <button type="submit" class="rounded-0 btn btn-block btn-outline-secondary px-4">Post</button>
+                            <div class="d-flex justify-content-between border-top rounded-bottom bg-light">
 
-                        </div>
-                    </form>
+                                <div class="btn-group" role="group" aria-label="Add content..">
+                                    <button type="button" class="btn btn-light text-secondary">
+                                        <ion-icon class="lead pt-2" name="image"></ion-icon>
+                                    </button>
+
+                                    <button type="button" class="btn btn-light text-secondary">
+                                        <ion-icon class="lead pt-2" name="link"></ion-icon>
+                                    </button>
+
+                                    <button type="button" class="btn btn-light text-secondary">
+                                        <ion-icon class="lead pt-2" name="code"></ion-icon>
+                                    </button>
+                                </div>
+
+                                <div>
+                                    <button type="submit" class="btn btn-light text-secondary p-3 px-5"><ion-icon class="lead pt-2" name="send"></ion-icon></button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
                 @endcan
 
                 @foreach($posts as $post)
                 <div class="card mt-3">
-                    <div class="card-header bg-white border-0">
+                    <div class="card-header bg-light border-0">
                         <div class="row">
+
                             <div class="col-1 pl-2">
-                                <img src="/storage/{{ $user->profile->profile_image }}" width="48" class="rounded-circle">
+                                <img src="{{ $user->profile->profileImage() }}" width="48" class="rounded-circle">
                             </div>
+
                             <div class="col-11 pl-4">
-                                <p class="m-0">{{ $user->profile->name ?? $user->email }}</p>
-                                <p>{{ $post->created_at->format('d-m-Y') }}</p>
+                                <p class="m-0">{{ $post->user->profile->name ?? $user->email }}</p>
+                                <p class="text-secondary">{{ $post->created_at->format('d-m-Y') }}</p>
                             </div>
+
                         </div>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body bg-light">
                         @if (session('status'))
                             <div class="alert alert-success" role="alert">
                                 {{ session('status') }}
@@ -78,10 +124,37 @@
                         <div class="collapse" id="collapse-{{ $post->id }}">
                             <form method="POST" action="/p/{{ $post->id }}/comment" enctype="multipart/form-data">
                                 @csrf
-                                <div class="form-group pt-3">
-                                    <textarea id="comment_text" type="text" class="form-control" name="comment_text"></textarea>
+                                <div class="form-group mt-3">
+                                    <textarea placeholder="Comment.." style="resize: none;" rows="5" id="comment_text" type="comment_text" class="form-control bg-light border-0 rounded-0 @error('post_text') is-invalid @enderror" name="comment_text" value="{{ old('comment_text') }}" required autocomplete="comment_text"></textarea>
+
+                                    @error('comment_text')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+
+                                    <div class="d-flex justify-content-between mt-2">
+
+                                        <div class="btn-group" role="group" aria-label="Add content..">
+                                            <button type="button" class="btn btn-light">
+                                                <ion-icon class="lead pt-2" name="image"></ion-icon>
+                                            </button>
+
+                                            <button type="button" class="btn btn-light">
+                                                <ion-icon class="lead pt-2" name="link"></ion-icon>
+                                            </button>
+
+                                            <button type="button" class="btn btn-light">
+                                                <ion-icon class="lead pt-2" name="code"></ion-icon>
+                                            </button>
+                                        </div>
+
+                                        <div>
+                                            <button type="submit" class="btn btn-light p-2 px-5">Post</button>
+                                        </div>
+
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-block btn-light">Post comment</button>
                             </form>
                         </div>
 

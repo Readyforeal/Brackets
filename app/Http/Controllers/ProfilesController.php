@@ -13,10 +13,12 @@ class ProfilesController extends Controller
     {
         $user = User::findOrFail($user);
         $posts = $user->posts;
+        $follows = (auth()->user()) ? auth()->user()->following->contains($user->id) : false;
 
         return view('profiles.profile', [
             'user' => $user,
             'posts' => $posts,
+            'follows' => $follows,
         ]);
     }
 
@@ -56,12 +58,15 @@ class ProfilesController extends Controller
             
             $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000,1000);
             $image->save();
+
+            $imageArray = ['profile_image' => $imagePath];
         }
+        
         
         if(request('profile_image')){
             auth()->user()->profile->update(array_merge(
                 $data, 
-                ['profile_image' => $imagePath]
+                $imageArray ?? []
             ));
         }else{
             auth()->user()->profile->update($data);

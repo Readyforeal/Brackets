@@ -82,7 +82,54 @@
         </nav>
 
         <main class="py-4">
-            @yield('content')
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-3 p-0" style="position: sticky;">
+                        <a href="/" class="btn d-flex text-secondary pt-3">
+                            <div>
+                                <h3><ion-icon name="home"></ion-icon></h3>
+                            </div>
+
+                            <div class="lead ml-3">
+                                Home
+                            </div>
+                        </a>
+
+                        <a href="/" class="btn d-flex text-secondary pt-3">
+                            <div>
+                                <h3><ion-icon name="people"></ion-icon></h3>
+                            </div>
+
+                            <div class="lead ml-3">
+                                Connect
+                            </div>
+                        </a>
+
+                        <a href="/" class="btn d-flex text-secondary pt-3">
+                            <div>
+                                <h3><ion-icon name="business"></ion-icon></h3>
+                            </div>
+
+                            <div class="lead ml-3">
+                                Community
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-6">
+                        @yield('content')
+                    </div>
+
+                    <div class="col-3">
+
+                        <div class="d-block">
+                            <p class="lead">Trending</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 </body>

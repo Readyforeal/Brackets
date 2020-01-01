@@ -18,4 +18,15 @@ class Profile extends Model
     {
         return Carbon::parse($this->attributes['dob'])->age;
     }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function profileImage()
+    {
+        $imagePath = ($this->profile_image) ? $this->profile_image : '/ion/src/svg/person-circle-outline.svg';
+        return '/storage/' . $imagePath;
+    }
 }

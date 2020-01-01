@@ -33,6 +33,6 @@ class CommentsController extends Controller
             'post_id' => $_post->id,
         ]);
 
-        return redirect('/profile/' . auth()->user()->id);
+        return redirect()->back();
     }
 }
