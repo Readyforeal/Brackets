@@ -8,7 +8,7 @@
                 <img src="{{ $user->profile->profileImage() }}" width="48" class="rounded-circle">
             </div>
 
-            <form method="POST" action="/p" enctype="multipart/form-data" class="mt-3">
+            <form method="POST" action="/p" enctype="multipart/form-data" class="mt-3 border rounded">
                 @csrf
 
                 <textarea placeholder="Create post.." style="resize: none;" rows="5" id="post_text" type="post_text" class="form-control p-3 bg-light text-secondary rounded-top border-0 @error('post_text') is-invalid @enderror" name="post_text" value="{{ old('post_text') }}" required autocomplete="post_text"></textarea>
@@ -30,9 +30,35 @@
                             <ion-icon class="lead pt-2" name="link"></ion-icon>
                         </button>
 
-                        <button type="button" class="btn btn-light text-secondary">
+                        <button type="button" class="btn btn-light text-secondary" data-toggle="modal" data-target="#code-modal">
                             <ion-icon class="lead pt-2" name="code"></ion-icon>
                         </button>
+                    </div>
+
+                    <div class="modal fade w-100" id="code-modal" tabindex="-1" role="dialog" aria-labelledby="code-modal-label" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="code-modal-label">Paste code</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <textarea class="form-control" id="editor">
+
+                                    </textarea>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
 
                     <div>
@@ -40,7 +66,7 @@
                     </div>
 
                 </div>
-                
+
             </form>
         </div>
     @endcan
