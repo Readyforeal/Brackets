@@ -79,7 +79,7 @@
                     <img src="{{ $post->user->profile->profileImage() }}" width="48" class="rounded-circle">
                 </div>
                 <div class="col-11 pl-4">
-                    <p class="m-0">{{ $post->user->profile->name ?? $post->user->email }}</p>
+                    <a href="/profile/{{ $post->user->id }}" class="m-0">{{ $post->user->username }}</a>
                     <p>{{ $post->created_at->format('d-m-Y') }}</p>
                 </div>
             </div>
@@ -137,13 +137,7 @@
             @foreach($post->comments as $comment)
             <div class="pt-3 border-bottom">
             
-                @if($comment->user->profile->name == '')
-                    <p>{{ $comment->user->email}}</p>
-                @endif
-
-                @if($comment->user->profile->name != '')
-                    <p>{{ $comment->user->profile->name}}</p>
-                @endif
+                <p>{{ $comment->user->username}}</p>
 
                 <p>{{ $comment->comment_text }}</p>
 

@@ -2,16 +2,89 @@
 
 @section('content')
 <div class="container">
-    <section class="border-bottom">
+
+    <!-- Mobile -->
+    <section class="border-bottom d-block d-sm-block d-md-none">
+        <div class="row p-4 text-center">
+            <div class="col-12 py-4">
+                <img src="{{ $user->profile->profileImage() }}" class="rounded-circle" width="150">
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <div class="col-4">
+                <p class="lead font-weight-bold m-0">{{ $user->posts->count() }}</p>
+                <p class="text-secondary">POSTS</p>
+            </div>
+
+            <div class="col-4">
+                <p class="lead font-weight-bold m-0">{{ $user->profile->followers->count() }}</p>
+                <p class="text-secondary">FOLLOWERS</p>
+            </div>
+
+            <div class="col-4">
+                <p class="lead font-weight-bold m-0">{{ $user->following->count() }}</p>
+                <p class="text-secondary">FOLLOWING</p>
+            </div>
+        </div>
+
+        <div class="row p-4">
+            <div class="col-12">
+
+                <h3 class="font-weight-bold">
+                    {{ $user->username }}
+                    
+                    @if($user->profile->dob != null)
+                    -    {{ $user->profile->getAge() }}
+                    @endif
+                </h3>
+
+                @if($user->profile->job_title != null)
+                    <p class="m-0">{{ $user->profile->job_title }}
+                @endif
+
+                @if($user->profile->job_employer != null)
+                    at {{ $user->profile->job_employer }}</p>
+                @endif
+
+                <p>{{ $user->profile->institution }} {{ $user->profile->graduation_year }}</p>
+
+                @can('update', $user->profile)
+                <a href="/profile/{{ $user->id }}/edit" class="text-link text-secondary">Edit profile</a>
+                @endcan
+
+                @if(auth()->user()->id != $user->id)
+                <follow-button user-id='{{ $user->id }}' follows="{{ $follows }}"></follow-button>
+                @endif
+            </div>
+        </div>
+    </section>
+
+    <!-- Desktop -->
+    <section class="border-bottom d-none d-sm-none d-md-block">
         <div class="row">
             <div class="col-3 p-5">
                 <img src="{{ $user->profile->profileImage() }}" class="rounded-circle img-fluid">
             </div>
 
             <div class="col-6 py-5">
-                <h3 class="font-weight-bold">{{ $user->profile->name }}, {{ $user->profile->getAge() }}</h3>
 
-                <p class="m-0">{{ $user->profile->job_title }} at {{ $user->profile->job_employer }}</p>
+                <h3 class="font-weight-bold">
+                    {{ $user->username }}
+                    
+                    @if($user->profile->dob != null)
+                    -    {{ $user->profile->getAge() }}
+                    @endif
+                </h3>
+
+                @if($user->profile->job_title != null)
+                    <p class="m-0">{{ $user->profile->job_title }}
+                @endif
+
+                @if($user->profile->job_employer != null)
+                    at {{ $user->profile->job_employer }}</p>
+                @endif
+
                 <p>{{ $user->profile->institution }} {{ $user->profile->graduation_year }}</p>
 
                 @can('update', $user->profile)
@@ -38,8 +111,7 @@
 
     <section class="mt-5">
         <div class="row">
-            <div class="col-3">
-
+            <div class="col-3 d-none d-sm-none d-md-block">
                 <p class="lead pt-5">About</p>
                 <p class="lead">{{ $user->profile->about }}</p>
 
@@ -50,11 +122,11 @@
                 <p class="text-secondary">{{ $user->profile->location }}</p>
             </div>
 
-            <div class="col-6">
+            <div class="col-12 col-sm-12 col-md-6">
                 @can('update', $user->profile)
                     <div class="mb-5">
                         <div class="pl-2">
-                            <img src="/storage/{{ $user->profile->profile_image }}" width="48" class="rounded-circle">
+                            <img src="{{ $user->profile->profileImage() }}" width="48" class="rounded-circle">
                         </div>
 
                         <form method="POST" action="/p" enctype="multipart/form-data" class="mt-3 rounded border">
@@ -103,7 +175,7 @@
                             </div>
 
                             <div class="col-11 pl-4">
-                                <p class="m-0">{{ $post->user->profile->name ?? $user->email }}</p>
+                                <a href="/profile/{{ $post->user->id }}" class="m-0">{{ $post->user->username }}</a>
                                 <p class="text-secondary">{{ $post->created_at->format('d-m-Y') }}</p>
                             </div>
 

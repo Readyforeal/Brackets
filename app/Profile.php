@@ -26,7 +26,7 @@ class Profile extends Model
 
     public function profileImage()
     {
-        $imagePath = ($this->profile_image) ? $this->profile_image : '/ion/src/svg/person-circle-outline.svg';
+        $imagePath = ($this->profile_image) ? $this->profile_image : 'profile\default\brackets-default-profile-picture.png';
         return '/storage/' . $imagePath;
     }
 }

@@ -30,7 +30,7 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <ion-icon name="code" class="lead"></ion-icon>
                 </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -59,7 +59,7 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->email }} <span class="caret"></span>
+                                    {{ Auth::user()->username }} <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -85,8 +85,9 @@
         <main class="py-4">
             <div class="container">
                 <div class="row">
-
-                    <div class="col-3 p-0" style="position: sticky;">
+                    
+                    <div class="col-md-3 col-sm-1 p-0" style="position: sticky;">
+                        <!--
                         <a href="/" class="btn d-flex text-secondary pt-3">
                             <div>
                                 <h3><ion-icon name="home"></ion-icon></h3>
@@ -116,18 +117,19 @@
                                 Community
                             </div>
                         </a>
+                        -->
                     </div>
-
-                    <div class="col-6">
+                
+                    <div class="col-md-6 col-sm-10">
                         @yield('content')
                     </div>
 
-                    <div class="col-3">
-
+                    <div class="col-md-3 col-sm-1">
+                        <!--
                         <div class="d-block">
                             <p class="lead">Trending</p>
                         </div>
-
+                    -->
                     </div>
                 </div>
             </div>
