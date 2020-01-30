@@ -26,3 +26,5 @@ Laravel is accessible, powerful, and provides tools required for large, robust a
 
 Brackets is a social media platform tailored toward programmers and their respective communities. Bracket's goal is to connect developers on a local level. I just want to get out basically.
 
+<img src="http://jamieaugust.com/wp-content/uploads/2020/01/brackets-1.jpg">
+<img src="http://jamieaugust.com/wp-content/uploads/2020/01/brackets-2.jpg">
